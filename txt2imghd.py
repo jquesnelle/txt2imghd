@@ -438,7 +438,7 @@ def text2img2(opt: Options):
             base_filename = f"{base_filename}u"
 
             source_image = Image.open(os.path.join(sample_path, f"{base_filename}.png"))
-            og_size = (int(source_image.size[0] / 2), int(source_image.size[1] / 2))
+            og_size = (opt.H,opt.W)
             slices, _ = grid_slice(source_image, gobig_overlap, og_size, False)
 
             betterslices = []
