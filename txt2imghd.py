@@ -1,4 +1,5 @@
 import argparse, os
+import shutil
 import cv2
 import torch
 import cv2
@@ -442,8 +443,18 @@ def text2img2(opt: Options):
 
     gobig_overlap = 64
 
+    str_img_sample_filename = f"{base_count:05}" + "_orig"
+    if(opt.img):
+        shutil.copyfile(opt.img, os.path.join(outpath + "/samples/", str_img_sample_filename + ".png"))
+
+    is_first_entry = True
+
     for init_img_number in generated:
-        base_filename = f"{init_img_number:05}"
+        if(is_first_entry and opt.img):
+            base_filename = str_img_sample_filename
+            is_first_entry = False
+        else: #skip the original image
+            base_filename = f"{init_img_number:05}"
 
         for _ in trange(opt.passes, desc="Passes"):
             realesrgan2x(opt.realesrgan, os.path.join(sample_path, f"{base_filename}.png"), os.path.join(sample_path, f"{base_filename}u.png"))
