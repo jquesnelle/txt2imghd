@@ -8,7 +8,7 @@ txt2imghd with default settings has the same VRAM requirements as regular Stable
 
 1. Have a working repository of [Stable Diffusion](https://raw.githubusercontent.com/CompVis/stable-diffusion)
 2. Copy `txt2imghd.py` into `scripts/`
-3. Download the appropriate [release of Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN/releases) and unzip it into the root of your Stable Diffusion repository
+3. Download the appropriate [release of Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN/releases) (the respective `realesrgan-ncnn-vulkan` .zip for your OS) and unzip it into the root of your Stable Diffusion repository
 
 ## Running
 
