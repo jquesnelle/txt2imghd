@@ -197,7 +197,7 @@ def grid_slice(source, overlap, og_size, maximize=False):
 class Options:
     prompt: str
     outdir: str
-    ddim_steps: int
+    steps: int
     n_iter: int
     H: int
     W: int
@@ -211,6 +211,8 @@ class Options:
     passes: int
     wm: str
     realesrgan: str
+    detail_steps: int
+    detail_scale: float
 
 def main():
     parser = argparse.ArgumentParser()
@@ -322,6 +324,18 @@ def main():
         default="realesrgan-ncnn-vulkan",
         help="path to realesrgan executable"
     )
+    parser.add_argument(
+        "--detail_steps",
+        type=int,
+        default=150,
+        help="number of sampling steps when detailing",
+    )
+    parser.add_argument(
+        "--detail_scale",
+        type=float,
+        default=10,
+        help="unconditional guidance scale when detailing: eps = eps(x, empty) + scale * (eps(x, cond) - eps(x, empty))",
+    )
     opt = parser.parse_args()
 
     if opt.prompt is None:
@@ -383,12 +397,10 @@ def text2img2(opt: Options):
 
     precision_scope = autocast
     generated = []
-    with torch.no_grad():
+    with torch.inference_mode():
         with precision_scope("cuda"):
             with model.ema_scope():
-                tic = time.time()
-                all_samples = list()
-                for n in trange(opt.n_iter, desc="Sampling"):
+                for _ in trange(opt.n_iter, desc="Sampling"):
                     for prompts in tqdm(data, desc="data"):
                         uc = None
                         if opt.scale != 1.0:
@@ -448,17 +460,17 @@ def text2img2(opt: Options):
                 init_image = repeat(init_image, '1 ... -> b ...', b=batch_size)
                 init_latent = model.get_first_stage_encoding(model.encode_first_stage(init_image))  # move to latent space
 
-                sampler.make_schedule(ddim_num_steps=opt.steps, ddim_eta=0, verbose=False)
+                sampler.make_schedule(ddim_num_steps=opt.detail_steps, ddim_eta=0, verbose=False)
 
                 assert 0. <= opt.strength <= 1., 'can only work with strength in [0.0, 1.0]'
-                t_enc = int(opt.strength * opt.steps)
+                t_enc = int(opt.strength * opt.detail_steps)
 
-                with torch.no_grad():
+                with torch.inference_mode():
                     with precision_scope("cuda"):
                         with model.ema_scope():
                             for prompts in tqdm(data, desc="data"):
                                 uc = None
-                                if opt.scale != 1.0:
+                                if opt.detail_scale != 1.0:
                                     uc = model.get_learned_conditioning(batch_size * [""])
                                 if isinstance(prompts, tuple):
                                     prompts = list(prompts)
@@ -467,7 +479,7 @@ def text2img2(opt: Options):
                                 # encode (scaled latent)
                                 z_enc = sampler.stochastic_encode(init_latent, torch.tensor([t_enc]*batch_size).to(device))
                                 # decode it
-                                samples = sampler.decode(z_enc, c, t_enc, unconditional_guidance_scale=opt.scale,
+                                samples = sampler.decode(z_enc, c, t_enc, unconditional_guidance_scale=opt.detail_scale,
                                                         unconditional_conditioning=uc,)
 
                                 x_samples = model.decode_first_stage(samples)
