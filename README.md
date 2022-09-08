@@ -23,7 +23,35 @@ txt2imghd will output three images: the original Stable Diffusion image, the ups
 If you're running into issues with [WatermarkEncoder](https://pypi.org/project/invisible-watermark/), install WatermarkEncoder in your ldm environment with
 `pip install invisible-watermark`
 
-## Example images
+### Optional Parameters
+
+A selection of useful parameters to be appended after `python scripts/txt2imghd.py`:
+
+`--prompt` the prompt to render (in quotes), examples  [below](#example-images--promts)
+
+`--img` only do detailing, using the path to an existing image (image will also be copied to output dir)
+
+`--generated` only do detailing, on a an image in the output folder, using the image's index (example "00003")
+
+`--n_iter 25` number of images to generate\
+*default = 1*
+
+`--gobig_overlap` overlap size for GOBIG\
+*default = 128*
+
+`--detail_steps` number of sampling steps when detailing\
+*default = 150*
+
+`--wm` watermark text using WatermarkEncoder\
+*default = "txt2imghd"*
+
+`--passes` number of upscaling/detailing passes\
+*default = 1* 
+
+`--strength` strength for noising/unnoising. 1.0 corresponds to full destruction of information in init image (especially useful when using an existing image)\
+*default = 0.3*
+
+## Example images / Promts
 
 [old harbour, tone mapped, shiny, intricate, cinematic lighting, highly detailed, digital painting, artstation, concept art, smooth, sharp focus, illustration, art by terry moore and greg rutkowski and alphonse mucha](gallery/00005ud.png)
 
