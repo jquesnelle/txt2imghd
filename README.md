@@ -20,6 +20,9 @@ python scripts/txt2imghd.py
 
 txt2imghd will output three images: the original Stable Diffusion image, the upscaled version (denoted by a `u` suffix), and the detailed version (denoted by the `ud` suffix).
 
+If you're running into issues with [WatermarkEncoder](https://pypi.org/project/invisible-watermark/), install WatermarkEncoder in your ldm environment with
+`pip install invisible-watermark`
+
 ## Example images
 
 [old harbour, tone mapped, shiny, intricate, cinematic lighting, highly detailed, digital painting, artstation, concept art, smooth, sharp focus, illustration, art by terry moore and greg rutkowski and alphonse mucha](gallery/00005ud.png)
