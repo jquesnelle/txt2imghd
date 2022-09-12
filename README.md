@@ -1,5 +1,7 @@
 # txt2imghd
 
+[![Replicate](https://replicate.com/cjwbw/stable-diffusion-high-resolution/badge)](https://replicate.com/cjwbw/stable-diffusion-high-resolution)
+
 txt2imghd is a port of the GOBIG mode from [progrockdiffusion](https://github.com/lowfuel/progrockdiffusion) applied to [Stable Diffusion](https://github.com/CompVis/stable-diffusion), with [Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN) as the upscaler. It creates detailed, higher-resolution images by first generating an image from a prompt, upscaling it, and then running img2img on smaller pieces of the upscaled image, and blending the result back into the original image.
 
 txt2imghd with default settings has the same VRAM requirements as regular Stable Diffusion, although generation of the detailed images will take longer.
