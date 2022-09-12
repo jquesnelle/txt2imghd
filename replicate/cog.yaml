@@ -1,0 +1,27 @@
+
+
+build:
+  cuda: "11.3"
+  gpu: true
+  python_version: "3.8"
+  system_packages:
+    - "libgl1-mesa-glx"
+    - "libglib2.0-0"
+  python_packages:
+    - "opencv-python==4.1.2.30"
+    - "pytorch-lightning==1.4.2"
+    - "torchmetrics==0.6.0"
+    - "omegaconf==2.1.1"
+    - "einops==0.3.0"
+    - "transformers==4.19.2"
+    - "kornia==0.6"
+    - "basicsr==1.4.2"
+
+  run:
+    - pip install torch==1.10.0+cu113 torchvision==0.11.1+cu113 -f https://download.pytorch.org/whl/torch_stable.html
+    - git clone https://github.com/openai/CLIP && pip install -e ./CLIP
+    - git clone https://github.com/xinntao/Real-ESRGAN && cd Real-ESRGAN && python setup.py develop
+    - git clone https://github.com/CompVis/taming-transformers && pip install -e ./taming-transformers
+    - mkdir -p /root/.cache/torch/hub/checkpoints/ && wget --output-document "/root/.cache/torch/hub/checkpoints/checkpoint_liberty_with_aug.pth" "https://github.com/DagnyT/hardnet/raw/master/pretrained/train_liberty_with_aug/checkpoint_liberty_with_aug.pth"
+
+predict: "predict.py:Predictor"
