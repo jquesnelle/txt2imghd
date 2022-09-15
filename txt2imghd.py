@@ -421,7 +421,8 @@ def text2img2(opt: Options):
 
     generated = opt.generated
     if generated is None and opt.img is not None:
-        shutil.copyfile(opt.img, os.path.join(sample_path, f"{base_count:05}.png"))
+        img = Image.open(opt.img).convert("RGB")
+        img.save(os.path.join(sample_path, f"{base_count:05}.png"))
         generated = [f"{base_count:05}"]
     elif isinstance(generated, str):
         generated = [generated]
