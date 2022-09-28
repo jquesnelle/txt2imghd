@@ -1,6 +1,5 @@
 import argparse, os, shutil
 from typing import List, Optional
-import cv2
 import torch
 import cv2
 import PIL
